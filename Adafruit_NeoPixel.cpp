@@ -33,6 +33,54 @@
 
 #include "Adafruit_NeoPixel.h"
 
+// ---------------------------------------- COLOR STRUCTS ----------------------------------------
+
+Adafruit_ColorRGB::Adafruit_ColorRGB(uint8_t r, uint8_t g, uint8_t b):
+red(r),
+green(g),
+blue(b)
+{}
+
+Adafruit_ColorRGB::Adafruit_ColorRGB(const Adafruit_ColorRGB& other):
+red(other.red),
+green(other.green),
+blue(other.blue)
+{}
+
+Adafruit_ColorRGB::~Adafruit_ColorRGB() {}
+
+Adafruit_ColorRGB Adafruit_ColorRGB::operator+(const Adafruit_GradientRGB& other)
+{
+  return Adafruit_ColorRGB((red + other.red), (green + other.green))
+}
+
+Adafruit_GradientRGB::Adafruit_GradientRGB(float r, float g, float b, uint16_t tot):
+red(r),
+green(g),
+blue(b),
+total(tot)
+{}
+
+Adafruit_GradientRGB::Adafruit_GradientRGB(const Adafruit_ColorRGB& start, const Adafruit_ColorRGB& end, uint16_t tot):
+red((float)(end.red     - start.red)   / tot),
+green((float)(end.green - start.green) / tot),
+blue((float)(end.blue   - start.blue)  / tot)
+{}
+
+Adafruit_GradientRGB::Adafruit_GradientRGB(const Adafruit_GradientRGB& other):
+red(other.red),
+green(other.green),
+blue(other.blue),
+total(other.total)
+{}
+
+Adafruit_ColorRGB Adafruit_GradientRGB::operator*(uint16_t x)
+{
+  return Adafruit_ColorRGB((uint8_t)(red*x), (uint8_t)(green*x), (uint8_t)(blue*x))
+}
+
+// -------------------------------------- NEOPIXEL DEFINITION ------------------------------------
+
 // Constructor when length, pin and type are known at compile-time:
 Adafruit_NeoPixel::Adafruit_NeoPixel(uint16_t n, uint8_t p, neoPixelType t) :
   begun(false), brightness(0), pixels(NULL), endTime(0)
@@ -1580,6 +1628,26 @@ void Adafruit_NeoPixel::setPixelColor(
     p[rOffset] = r;          // Store R,G,B
     p[gOffset] = g;
     p[bOffset] = b;
+  }
+}
+
+void Adafruit_NeoPixel::setPixelColor(uint16_t n, const Adafruit_ColorRGB& c) {
+  if(n < numLEDs) {
+    if(brightness) { // See notes in setBrightness()
+      c.red   = (c.red   * brightness) >> 8;
+      c.green = (c.green * brightness) >> 8;
+      c.blue  = (c.blue  * brightness) >> 8;
+    }
+    uint8_t *p;
+    if(wOffset == rOffset) { // Is an RGB-type strip
+      p = &pixels[n * 3];    // 3 bytes per pixel
+    } else {                 // Is a WRGB-type strip
+      p = &pixels[n * 4];    // 4 bytes per pixel
+      p[wOffset] = 0;        // But only R,G,B passed -- set W to 0
+    }
+    p[rOffset] = c.red;      // R,G,B always stored
+    p[gOffset] = c.green;
+    p[bOffset] = c.blue;
   }
 }
 

@@ -26,6 +26,38 @@
  #include <pins_arduino.h>
 #endif
 
+// ---------------------------------------- COLOR STRUCTS ----------------------------------------
+
+struct Adafruit_GradientRGB;
+
+struct Adafruit_ColorRGB {
+  public:
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+
+    Adafruit_ColorRGB(uint8_t r, uint8_t g, uint8_t b);
+    Adafruit_ColorRGB(const Adafruit_ColorRGB& other);
+
+    Adafruit_ColorRGB operator+(const Adafruit_ColorRGB& other);
+}
+
+struct Adafruit_GradientRGB {
+  public:
+    float red;
+    float green;
+    float blue;
+    uint16_t total;
+
+    Adafruit_GradientRGB(float r, float g, float b, uint16_t tot);
+    Adafruit_GradientRGB(const Adafruit_ColorRGB& start, const Adafruit_ColorRGB& end, uint16_t tot);
+    Adafruit_GradientRGB(const Adafruit_GradientRGB& other);
+
+    Adafruit_ColorRGB operator*(uint16_t x);
+};
+
+// -------------------------------------- NEOPIXEL DEFINITION ------------------------------------
+
 // The order of primary colors in the NeoPixel data stream can vary
 // among device types, manufacturers and even different revisions of
 // the same item.  The third parameter to the Adafruit_NeoPixel
@@ -129,6 +161,7 @@ class Adafruit_NeoPixel {
     setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b),
     setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b, uint8_t w),
     setPixelColor(uint16_t n, uint32_t c),
+    setPixelColor(uint16_t n, const Adafruit_ColorRGB& c);
     setBrightness(uint8_t),
     clear(),
     updateLength(uint16_t n),
