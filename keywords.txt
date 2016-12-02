@@ -4,7 +4,9 @@
 # Class
 #######################################
 
-Adafruit_NeoPixel	KEYWORD1
+Adafruit_NeoPixel	 KEYWORD1
+Adafruit_ColorRGB    KEYWORD1
+Adafruit_GradientRGB KEYWORD1
 
 #######################################
 # Methods and Functions 
