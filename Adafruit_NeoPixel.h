@@ -28,32 +28,86 @@
 
 // ---------------------------------------- COLOR STRUCTS ----------------------------------------
 
-struct Adafruit_GradientRGB;
-
+/**
+ * Represents an RGB color value in Adafruit Neopixel
+ * Note: Color values range from 0 to 1 inclusive
+ *
+ * @author  Anshul Kharbanda
+ * @created 12 - 15 - 2016
+ */
 struct Adafruit_ColorRGB {
   public:
-    uint8_t red;
-    uint8_t green;
-    uint8_t blue;
+    /**
+     * The red component of the color
+     */
+    float red;
 
-    Adafruit_ColorRGB(uint8_t r, uint8_t g, uint8_t b);
+    /**
+     * The green component of the color
+     */
+    float green;
+
+    /**
+     * The blue component of the color
+     */
+    float blue;
+
+    /**
+     * Creates a new Adafruit_ColorRGB with the given colors
+     *
+     * @param r red component of the color
+     * @param g green component of the color
+     * @param b blue component of the color
+     */
+    Adafruit_ColorRGB(float r, float g, float b);
+ 
+    /**
+     * Copy constructor for Adafruit_ColorRGB
+     *
+     * @param other the other Adafruit_ColorRGB to copy
+     */
     Adafruit_ColorRGB(const Adafruit_ColorRGB& other);
 
+    /**
+     * Destroys the Adafruit_ColorRGB to add
+     */
+    ~Adafruit_ColorRGB();
+
+    /**
+     * Returns the sum of this Adafruit_ColorRGB and other Adafruit_ColorRGB
+     *
+     * @param other the other Adafruit_ColorRGB to add
+     *
+     * @return the sum of this Adafruit_ColorRGB and other Adafruit_ColorRGB
+     */
     Adafruit_ColorRGB operator+(const Adafruit_ColorRGB& other);
-}
 
-struct Adafruit_GradientRGB {
-  public:
-    float red;
-    float green;
-    float blue;
-    uint16_t total;
+    /**
+     * Returns the difference between this Adafruit_ColorRGB and other Adafruit_ColorRGB
+     *
+     * @param other the other Adafruit_ColorRGB to add
+     *
+     * @return the difference between this Adafruit_ColorRGB and other Adafruit_ColorRGB
+     */
+    Adafruit_ColorRGB operator-(const Adafruit_ColorRGB& other);
 
-    Adafruit_GradientRGB(float r, float g, float b, uint16_t tot);
-    Adafruit_GradientRGB(const Adafruit_ColorRGB& start, const Adafruit_ColorRGB& end, uint16_t tot);
-    Adafruit_GradientRGB(const Adafruit_GradientRGB& other);
+    /**
+     * Returns the product of this Adafruit_ColorRGB and the scalar value
+     *
+     * @param x the scalar value to multiply by
+     *
+     * @return the product of this Adafruit_ColorRGB and the scalar value
+     */
+    Adafruit_ColorRGB operator*(float x);
 
-    Adafruit_ColorRGB operator*(uint16_t x);
+    /**
+     * Returns the product of this Adafruit_ColorRGB and the inverse of the scalar value
+     *
+     * @param x the scalar value to divide by
+     *
+     * @return the product of this Adafruit_ColorRGB and the inverse of the scalar value
+     */
+    Adafruit_ColorRGB operator/(float x);
 };
 
 // -------------------------------------- NEOPIXEL DEFINITION ------------------------------------
@@ -161,8 +215,8 @@ class Adafruit_NeoPixel {
     setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b),
     setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b, uint8_t w),
     setPixelColor(uint16_t n, uint32_t c),
-    setPixelColor(uint16_t n, const Adafruit_ColorRGB& c);
-    setBrightness(uint8_t),
+    setPixelColor(uint16_t n, const Adafruit_ColorRGB& c),
+    setBrightness(uint8_t b),
     clear(),
     updateLength(uint16_t n),
     updateType(neoPixelType t);

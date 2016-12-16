@@ -35,48 +35,125 @@
 
 // ---------------------------------------- COLOR STRUCTS ----------------------------------------
 
-Adafruit_ColorRGB::Adafruit_ColorRGB(uint8_t r, uint8_t g, uint8_t b):
+/**
+ * Creates a new Adafruit_ColorRGB with the given colors
+ *
+ * @param r red component of the color
+ * @param g green component of the color
+ * @param b blue component of the color
+ */
+Adafruit_ColorRGB::Adafruit_ColorRGB(float r, float g, float b):
 red(r),
 green(g),
 blue(b)
 {}
 
+/**
+ * Copy constructor for Adafruit_ColorRGB
+ *
+ * @param other the other Adafruit_ColorRGB to copy
+ */
 Adafruit_ColorRGB::Adafruit_ColorRGB(const Adafruit_ColorRGB& other):
 red(other.red),
 green(other.green),
 blue(other.blue)
 {}
 
+/**
+ * Destroys the Adafruit_ColorRGB to add
+ */
 Adafruit_ColorRGB::~Adafruit_ColorRGB() {}
 
-Adafruit_ColorRGB Adafruit_ColorRGB::operator+(const Adafruit_GradientRGB& other)
+/**
+ * Returns the sum of this Adafruit_ColorRGB and other Adafruit_ColorRGB
+ *
+ * @param other the other Adafruit_ColorRGB to add
+ *
+ * @return the sum of this Adafruit_ColorRGB and other Adafruit_ColorRGB
+ */
+Adafruit_ColorRGB Adafruit_ColorRGB::operator+(const Adafruit_ColorRGB& other)
 {
-  return Adafruit_ColorRGB((red + other.red), (green + other.green))
+  // Calculated new values
+  float nred   = red   + other.red;
+  float ngreen = green + other.green;
+  float nblue  = blue  + other.blue;
+
+  // Clamped values
+  float cred   = nred   > 1 ? 1 : (nred   < -1 ? -1 : nred);
+  float cgreen = ngreen > 1 ? 1 : (ngreen < -1 ? -1 : ngreen);
+  float cblue  = nblue  > 1 ? 1 : (nblue  < -1 ? -1 : nblue);
+
+  // Return new color
+  return Adafruit_ColorRGB(cred, cgreen, cblue);
 }
 
-Adafruit_GradientRGB::Adafruit_GradientRGB(float r, float g, float b, uint16_t tot):
-red(r),
-green(g),
-blue(b),
-total(tot)
-{}
-
-Adafruit_GradientRGB::Adafruit_GradientRGB(const Adafruit_ColorRGB& start, const Adafruit_ColorRGB& end, uint16_t tot):
-red((float)(end.red     - start.red)   / tot),
-green((float)(end.green - start.green) / tot),
-blue((float)(end.blue   - start.blue)  / tot)
-{}
-
-Adafruit_GradientRGB::Adafruit_GradientRGB(const Adafruit_GradientRGB& other):
-red(other.red),
-green(other.green),
-blue(other.blue),
-total(other.total)
-{}
-
-Adafruit_ColorRGB Adafruit_GradientRGB::operator*(uint16_t x)
+/**
+ * Returns the difference between this Adafruit_ColorRGB and other Adafruit_ColorRGB
+ *
+ * @param other the other Adafruit_ColorRGB to add
+ *
+ * @return the difference between this Adafruit_ColorRGB and other Adafruit_ColorRGB
+ */
+Adafruit_ColorRGB Adafruit_ColorRGB::operator-(const Adafruit_ColorRGB& other)
 {
-  return Adafruit_ColorRGB((uint8_t)(red*x), (uint8_t)(green*x), (uint8_t)(blue*x))
+  // Calculated new values
+  float nred   = red   - other.red;
+  float ngreen = green - other.green;
+  float nblue  = blue  - other.blue;
+
+  // Clamped values
+  float cred   = nred   > 1 ? 1 : (nred   < -1 ? -1 : nred);
+  float cgreen = ngreen > 1 ? 1 : (ngreen < -1 ? -1 : ngreen);
+  float cblue  = nblue  > 1 ? 1 : (nblue  < -1 ? -1 : nblue);
+
+  // Return new color
+  return Adafruit_ColorRGB(cred, cgreen, cblue);
+}
+
+/**
+ * Returns the product of this Adafruit_ColorRGB and the scalar value
+ *
+ * @param x the scalar value to multiply by
+ *
+ * @return the product of this Adafruit_ColorRGB and the scalar value
+ */
+Adafruit_ColorRGB Adafruit_ColorRGB::operator*(float x)
+{
+  // Calculated new values
+  float nred   = red   * x;
+  float ngreen = green * x;
+  float nblue  = blue  * x;
+
+  // Clamped values
+  float cred   = nred   > 1 ? 1 : (nred   < -1 ? -1 : nred);
+  float cgreen = ngreen > 1 ? 1 : (ngreen < -1 ? -1 : ngreen);
+  float cblue  = nblue  > 1 ? 1 : (nblue  < -1 ? -1 : nblue);
+
+  // Return new color
+  return Adafruit_ColorRGB(cred, cgreen, cblue);
+}
+
+/**
+ * Returns the product of this Adafruit_ColorRGB and the inverse of the scalar value
+ *
+ * @param x the scalar value to divide by
+ *
+ * @return the product of this Adafruit_ColorRGB and the inverse of the scalar value
+ */
+Adafruit_ColorRGB Adafruit_ColorRGB::operator/(float x)
+{
+  // Calculated new values
+  float nred   = red   / x;
+  float ngreen = green / x;
+  float nblue  = blue  / x;
+
+  // Clamped values
+  float cred   = nred   > 1 ? 1 : (nred   < -1 ? -1 : nred);
+  float cgreen = ngreen > 1 ? 1 : (ngreen < -1 ? -1 : ngreen);
+  float cblue  = nblue  > 1 ? 1 : (nblue  < -1 ? -1 : nblue);
+
+  // Return new color
+  return Adafruit_ColorRGB(cred, cgreen, cblue);
 }
 
 // -------------------------------------- NEOPIXEL DEFINITION ------------------------------------
@@ -1633,10 +1710,14 @@ void Adafruit_NeoPixel::setPixelColor(
 
 void Adafruit_NeoPixel::setPixelColor(uint16_t n, const Adafruit_ColorRGB& c) {
   if(n < numLEDs) {
+    uint8_t red   = (uint8_t)(255*c.red);
+    uint8_t green = (uint8_t)(255*c.green);
+    uint8_t blue  = (uint8_t)(255*c.blue);
+
     if(brightness) { // See notes in setBrightness()
-      c.red   = (c.red   * brightness) >> 8;
-      c.green = (c.green * brightness) >> 8;
-      c.blue  = (c.blue  * brightness) >> 8;
+      red   = (red   * brightness) >> 8;
+      green = (green * brightness) >> 8;
+      blue  = (blue  * brightness) >> 8;
     }
     uint8_t *p;
     if(wOffset == rOffset) { // Is an RGB-type strip
@@ -1645,9 +1726,9 @@ void Adafruit_NeoPixel::setPixelColor(uint16_t n, const Adafruit_ColorRGB& c) {
       p = &pixels[n * 4];    // 4 bytes per pixel
       p[wOffset] = 0;        // But only R,G,B passed -- set W to 0
     }
-    p[rOffset] = c.red;      // R,G,B always stored
-    p[gOffset] = c.green;
-    p[bOffset] = c.blue;
+    p[rOffset] = red;        // R,G,B always stored
+    p[gOffset] = green;
+    p[bOffset] = blue;
   }
 }
 
