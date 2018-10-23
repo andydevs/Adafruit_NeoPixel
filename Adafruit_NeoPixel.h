@@ -53,6 +53,11 @@ struct Adafruit_ColorRGB {
     float blue;
 
     /**
+     * Creates an empty Adafruit_ColorRGB which is black
+     */
+    Adafruit_ColorRGB();
+
+    /**
      * Creates a new Adafruit_ColorRGB with the given colors
      *
      * @param r red component of the color
@@ -60,7 +65,7 @@ struct Adafruit_ColorRGB {
      * @param b blue component of the color
      */
     Adafruit_ColorRGB(float r, float g, float b);
- 
+
     /**
      * Copy constructor for Adafruit_ColorRGB
      *

@@ -36,6 +36,15 @@
 // ---------------------------------------- COLOR STRUCTS ----------------------------------------
 
 /**
+ * Creates an empty Adafruit_ColorRGB which is black
+ */
+Adafruit_ColorRGB::Adafruit_ColorRGB():
+red(0.0),
+green(0.0),
+blue(0.0)
+{}
+
+/**
  * Creates a new Adafruit_ColorRGB with the given colors
  *
  * @param r red component of the color
@@ -1864,16 +1873,3 @@ uint8_t Adafruit_NeoPixel::getBrightness(void) const {
 void Adafruit_NeoPixel::clear() {
   memset(pixels, 0, numBytes);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
